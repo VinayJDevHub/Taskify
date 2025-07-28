@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+<div class="flex flex-col justify-center py-12 sm:px-6 lg:px-8 min-h-[calc(100vh-4rem)]">
+    <div class="sm:mx-auto sm:w-full sm:max-w-md">
+        <h2 class="text-center text-3xl font-bold tracking-wide text-[#EDEDED]">Sign in to Taskify</h2>
+        <p class="mt-2 text-center text-sm text-[#AAAAAA]">
+            Don't have an account?
+            <a href="{% url 'register' %}"
+                class="font-medium text-[#00FFFF] hover:text-[#FFD166] transition duration-300">Register here</a>
+        </p>
+    </div>
+
+    <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+        <div class="bg-[#1E1E1E] py-8 px-6 rounded-2xl shadow-lg shadow-cyan-500/20">
+            {% if form.errors %}
+            <div
+                class="mb-6 bg-[#FF6E6E]/10 border border-[#FF6E6E] text-[#FF6E6E] px-4 py-3 rounded-xl flex items-center">
+                <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <p class="text-sm">Your username or password didn't match. Please try again.</p>
+            </div>
+            {% endif %}
+
+            {% if next %}
+            {% if user.is_authenticated %}
+            <div
+                class="mb-6 bg-[#FFD166]/10 border border-[#FFD166] text-[#FFD166] px-4 py-3 rounded-xl flex items-center">
+                <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <p class="text-sm">Your account doesn't have access to this page. Please login with an account that has
+                    access.</p>
+            </div>
+            {% else %}
+            <div
+                class="mb-6 bg-[#00FFFF]/10 border border-[#00FFFF] text-[#00FFFF] px-4 py-3 rounded-xl flex items-center">
+                <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <p class="text-sm">Please login to see this page.</p>
+            </div>
+            {% endif %}
+            {% endif %}
+
+            <form class="space-y-6" method="post" action="{% url 'login' %}">
+                {% csrf_token %}
+                <input type="hidden" name="next" value="{{ next }}">
+
+                <div>
+                    <label for="id_username" class="block text-sm font-medium text-[#AAAAAA]">Username</label>
+                    <div class="mt-1">
+                        <input id="id_username" name="username" type="text" required autofocus
+                            class="block w-full bg-[#2A2A2A] text-[#EDEDED] rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-[#00FFFF]/50 transition duration-300 border border-[#2A2A2A]">
+                    </div>
+                </div>
+
+                <div>
+                    <label for="id_password" class="block text-sm font-medium text-[#AAAAAA]">Password</label>
+                    <div class="mt-1">
+                        <input id="id_password" name="password" type="password" required
+                            class="block w-full bg-[#2A2A2A] text-[#EDEDED] rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-[#00FFFF]/50 transition duration-300 border border-[#2A2A2A]">
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                        <input id="remember-me" name="remember-me" type="checkbox"
+                            class="h-4 w-4 text-[#00FFFF] focus:ring-[#00FFFF]/50 border-[#2A2A2A] rounded bg-[#2A2A2A]">
+                        <label for="remember-me" class="ml-2 block text-sm text-[#AAAAAA]">Remember me</label>
+                    </div>
+                </div>
+
+                <div>
+                    <button type="submit"
+                        class="w-full flex justify-center py-3 px-4 rounded-xl text-sm font-medium text-[#121212] bg-[#00FFFF] hover:bg-[#FFD166] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-[#1E1E1E] focus:ring-[#00FFFF] transition duration-300 shadow-lg shadow-cyan-500/20">
+                        Sign in
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

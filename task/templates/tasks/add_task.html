@@ -1,0 +1,135 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="flex flex-col justify-center py-12 sm:px-6 lg:px-8 min-h-[calc(100vh-4rem)]">
+    <div class="sm:mx-auto sm:w-full sm:max-w-md">
+        <div class="bg-[#1E1E1E] p-6 rounded-2xl shadow-lg shadow-cyan-500/20">
+            <div class="flex items-center justify-between mb-6">
+                <h1 class="text-2xl font-bold tracking-wide text-[#EDEDED] flex items-center">
+                    <svg class="h-6 w-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                    </svg>
+                    {{ title }}
+                </h1>
+                <a href="{% url 'task_list' %}"
+                    class="text-sm text-[#00FFFF] hover:text-[#FFD166] transition duration-300 flex items-center">
+                    <svg class="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                    </svg>
+                    Back to list
+                </a>
+            </div>
+
+            {% if form.errors %}
+            <div
+                class="mb-6 bg-[#FF6E6E]/10 border border-[#FF6E6E] text-[#FF6E6E] px-4 py-3 rounded-xl flex items-center">
+                <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <p class="text-sm">Please correct the errors below.</p>
+            </div>
+            {% endif %}
+
+            <form method="POST" class="space-y-6">
+                {% csrf_token %}
+
+                <!-- Title Field -->
+                <div>
+                    <label for="id_title" class="block text-sm font-medium text-[#AAAAAA]">Title *</label>
+                    <div class="mt-1">
+                        <input type="text" name="title" id="id_title" required
+                            class="block w-full bg-[#2A2A2A] text-[#EDEDED] rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-[#00FFFF]/50 transition duration-300 border border-[#2A2A2A] {% if form.title.errors %}border-[#FF6E6E] text-[#FF6E6E]{% endif %}"
+                            value="{{ form.title.value|default:'' }}"
+                            aria-invalid="{% if form.title.errors %}true{% else %}false{% endif %}"
+                            aria-describedby="{% if form.title.errors %}title-error{% endif %}">
+                    </div>
+                    {% if form.title.errors %}
+                    <p class="mt-2 text-sm text-[#FF6E6E]" id="title-error">{{ form.title.errors.as_text }}</p>
+                    {% endif %}
+                </div>
+
+                <!-- Description Field -->
+                <div>
+                    <label for="id_description" class="block text-sm font-medium text-[#AAAAAA]">Description</label>
+                    <div class="mt-1">
+                        <textarea name="description" id="id_description" rows="3"
+                            class="block w-full bg-[#2A2A2A] text-[#EDEDED] rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-[#00FFFF]/50 transition duration-300 border border-[#2A2A2A] {% if form.description.errors %}border-[#FF6E6E] text-[#FF6E6E]{% endif %}"
+                            aria-invalid="{% if form.description.errors %}true{% else %}false{% endif %}"
+                            aria-describedby="{% if form.description.errors %}description-error{% endif %}">{{ form.description.value|default:'' }}</textarea>
+                    </div>
+                    {% if form.description.errors %}
+                    <p class="mt-2 text-sm text-[#FF6E6E]" id="description-error">{{ form.description.errors.as_text }}
+                    </p>
+                    {% endif %}
+                </div>
+
+                <!-- Status Field -->
+                <div>
+                    <label for="id_status" class="block text-sm font-medium text-[#AAAAAA]">Status *</label>
+                    <div class="mt-1">
+                        <select name="status" id="id_status" required
+                            class="block w-full bg-[#2A2A2A] text-[#EDEDED] rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-[#00FFFF]/50 transition duration-300 border border-[#2A2A2A] {% if form.status.errors %}border-[#FF6E6E]{% endif %}"
+                            aria-invalid="{% if form.status.errors %}true{% else %}false{% endif %}"
+                            aria-describedby="{% if form.status.errors %}status-error{% endif %}">
+                            {% for value, label in form.fields.status.choices %}
+                            <option value="{{ value }}" {% if form.status.value == value %}selected{% endif %}>{{ label }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    {% if form.status.errors %}
+                    <p class="mt-2 text-sm text-[#FF6E6E]" id="status-error">{{ form.status.errors.as_text }}</p>
+                    {% endif %}
+                </div>
+
+                <!-- Priority Field -->
+                <div>
+                    <label for="id_priority" class="block text-sm font-medium text-[#AAAAAA]">Priority *</label>
+                    <div class="mt-1">
+                        <select name="priority" id="id_priority" required
+                            class="block w-full bg-[#2A2A2A] text-[#EDEDED] rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-[#00FFFF]/50 transition duration-300 border border-[#2A2A2A] {% if form.priority.errors %}border-[#FF6E6E]{% endif %}"
+                            aria-invalid="{% if form.priority.errors %}true{% else %}false{% endif %}"
+                            aria-describedby="{% if form.priority.errors %}priority-error{% endif %}">
+                            {% for value, label in form.fields.priority.choices %}
+                            <option value="{{ value }}" {% if form.priority.value == value %}selected{% endif %}>{{ label }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    {% if form.priority.errors %}
+                    <p class="mt-2 text-sm text-[#FF6E6E]" id="priority-error">{{ form.priority.errors.as_text }}</p>
+                    {% endif %}
+                </div>
+
+                <!-- Due Date Field -->
+                <div>
+                    <label for="id_due_date" class="block text-sm font-medium text-[#AAAAAA]">Due Date</label>
+                    <div class="mt-1">
+                        <input type="date" name="due_date" id="id_due_date"
+                            class="block w-full bg-[#2A2A2A] text-[#EDEDED] rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-[#00FFFF]/50 transition duration-300 border border-[#2A2A2A] {% if form.due_date.errors %}border-[#FF6E6E]{% endif %}"
+                            value="{{ form.due_date.value|date:'Y-m-d'|default:'' }}"
+                            aria-invalid="{% if form.due_date.errors %}true{% else %}false{% endif %}"
+                            aria-describedby="{% if form.due_date.errors %}due_date-error{% endif %}">
+                    </div>
+                    {% if form.due_date.errors %}
+                    <p class="mt-2 text-sm text-[#FF6E6E]" id="due_date-error">{{ form.due_date.errors.as_text }}</p>
+                    {% endif %}
+                </div>
+
+                <div class="flex justify-end space-x-4 pt-4">
+                    <a href="{% url 'task_list' %}"
+                        class="px-4 py-3 bg-[#2A2A2A] text-[#EDEDED] rounded-xl hover:bg-[#AAAAAA] hover:text-[#121212] transition duration-300">Cancel</a>
+                    <button type="submit"
+                        class="px-4 py-3 bg-[#00FFFF] text-[#121212] rounded-xl hover:bg-[#FFD166] transition duration-300 shadow-lg shadow-cyan-500/20">
+                        {{ button_text }}
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

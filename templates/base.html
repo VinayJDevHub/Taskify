@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Taskify{% endblock %}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-[#121212] text-[#EDEDED] font-inter min-h-screen">
+    <!-- Main Container -->
+    <div class="flex flex-col h-screen">
+        <!-- Top Navbar -->
+        <header class="bg-[#1E1E1E] p-4 flex justify-between items-center border-b border-[#2A2A2A]">
+            <div>
+                <h1 class="text-2xl font-bold tracking-wide text-[#00FFFF]">Taskify</h1>
+            </div>
+            {% if user.is_authenticated %}
+            <div class="flex items-center space-x-6">
+               
+                <nav class="flex items-center space-x-6">
+                    <a href="{% url 'task_list' %}"
+                        class="text-[#EDEDED] hover:text-[#00FFFF] transition duration-300 flex items-center space-x-2">
+                        
+                        <span>Tasks</span>
+                    </a>
+                    <a href="{% url 'add_task' %}"
+                        class="text-[#EDEDED] hover:text-[#00FFFF] transition duration-300 flex items-center space-x-2">
+                       
+                        <span>Add Task</span>
+                    </a>
+                    <form method="POST" action="{% url 'logout' %}" class="inline">
+                        {% csrf_token %}
+                        <button type="submit"
+                            class="text-[#EDEDED] hover:text-[#00FFFF] transition duration-300 flex items-center space-x-2">
+                           
+                            <span>Logout</span>
+                        </button>
+                    </form>
+                </nav>
+            </div>
+            {% else %}
+            <nav class="flex items-center space-x-6">
+                <a href="{% url 'login' %}"
+                    class="text-[#EDEDED] hover:text-[#00FFFF] transition duration-300">Login</a>
+                <a href="{% url 'register' %}"
+                    class="text-[#EDEDED] hover:text-[#00FFFF] transition duration-300">Register</a>
+            </nav>
+            {% endif %}
+        </header>
+
+        <!-- Main Content Area -->
+        <main class="flex-1 p-6 overflow-auto">
+            {% block content %}
+            {% endblock %}
+        </main>
+    </div>
+
+    {% if debug %}
+    <script src="http://localhost:8000/__reload__/reload.js"></script>
+    {% endif %}
+</body>
+
+</html>

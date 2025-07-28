@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto">
+    <h2 class="text-2xl font-bold tracking-wide mb-6">Your Tasks</h2>
+
+    <!-- Search & Filter Form -->
+    <form method="get" class="mb-8 flex flex-wrap items-end gap-4">
+        <div class="relative flex-1 min-w-[200px]">
+            <input type="text" name="q" placeholder="Search tasks..." value="{{ request.GET.q }}"
+                class="w-full bg-[#2A2A2A] text-[#EDEDED] rounded-xl p-3 pl-10 focus:outline-none focus:ring-2 focus:ring-[#00FFFF]/50 transition duration-300 border border-[#2A2A2A]" />
+            <svg class="w-5 h-5 absolute left-3 top-3.5 text-[#AAAAAA]" fill="none" stroke="currentColor"
+                viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+        </div>
+
+        <select name="status"
+            class="bg-[#2A2A2A] text-[#EDEDED] rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-[#00FFFF]/50 transition duration-300 border border-[#2A2A2A] min-w-[120px]">
+            <option value="">All Status</option>
+            {% for value, label in status_choices %}
+            <option value="{{ value }}" {% if request.GET.status == value %}selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+        </select>
+
+        <select name="priority"
+            class="bg-[#2A2A2A] text-[#EDEDED] rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-[#00FFFF]/50 transition duration-300 border border-[#2A2A2A] min-w-[120px]">
+            <option value="">All Priority</option>
+            {% for value, label in priority_choices %}
+            <option value="{{ value }}" {% if request.GET.priority == value %}selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+        </select>
+
+        <select name="overdue"
+            class="bg-[#2A2A2A] text-[#EDEDED] rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-[#00FFFF]/50 transition duration-300 border border-[#2A2A2A] min-w-[120px]">
+            <option value="">All</option>
+            <option value="yes" {% if request.GET.overdue == 'yes' %}selected{% endif %}>Overdue</option>
+        </select>
+
+        <button type="submit"
+            class="bg-[#00FFFF] text-[#121212] px-4 py-3 rounded-xl hover:bg-[#FFD166] transition duration-300 shadow-lg shadow-cyan-500/20">
+            Filter
+        </button>
+        <a href="{% url 'task_list' %}" class="text-[#00FFFF] hover:text-[#FFD166] transition duration-300">Reset</a>
+    </form>
+
+    <!-- Task List -->
+    <ul class="space-y-4">
+        {% for task in tasks %}
+        <li
+            class="bg-[#1E1E1E] p-4 rounded-2xl shadow-lg shadow-cyan-500/20 transition duration-300 hover:scale-[1.02] {% if task.status  ==  'DONE' %}opacity-70 border-l-4 border-[#00FFFF]{% endif %}">
+            <div class="flex justify-between items-start">
+                <div>
+                    <div class="flex items-center space-x-3">
+                        <h3 class="text-lg font-semibold {% if task.status  ==  'DONE' %}line-through{% endif %}">{{task.title }}</h3>
+                        <span
+                            class="text-xs px-2 py-1 rounded-full {% if task.priority  ==  'High' %}bg-[#FF6E6E] text-[#121212] {% elif task.priority  ==  'Medium' %}bg-[#FFD166] text-[#121212] {% else %}bg-[#AAAAAA] text-[#121212] {% endif %}">   
+                            {{ task.priority }}
+                        </span>
+                    </div>
+                    <p class="text-sm text-[#AAAAAA] mt-2 {% if task.status  ==  'DONE' %}line-through{% endif %}">{{task.description }}</p>
+                    <p class="text-sm text-[#FF6E6E] font-semibold mt-1">Due: {{ task.due_date }}</p>
+
+                    <form method="POST" action="{% url 'quick_update' task.id %}"
+                        class="mt-4 flex flex-wrap gap-4 items-center">
+                        {% csrf_token %}
+                        <div class="flex items-center gap-2">
+                            <label class="text-sm text-[#AAAAAA]">Status:</label>
+                            <select name="status" onchange="this.form.submit()"
+                                class="bg-[#2A2A2A] text-[#EDEDED] rounded-xl p-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#00FFFF]/50 transition duration-300 border border-[#2A2A2A]">
+                                {% for value, label in task.STATUS_CHOICES %}
+                                <option value="{{ value }}" {% if task.status == value %}selected{% endif %}>{{ label }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <label class="text-sm text-[#AAAAAA]">Priority:</label>
+                            <select name="priority" onchange="this.form.submit()"
+                                class="bg-[#2A2A2A] text-[#EDEDED] rounded-xl p-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#00FFFF]/50 transition duration-300 border border-[#2A2A2A]">
+                                {% for value, label in task.PRIORITY_CHOICES %}
+                                <option value="{{ value }}" {% if task.priority == value %}selected{% endif %}>{{ label }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="flex space-x-2">
+                    <a href="{% url 'edit_task' task.id %}"
+                        class="bg-[#00FFFF] text-[#121212] px-3 py-2 rounded-xl hover:bg-[#FFD166] transition duration-300 text-sm shadow-lg shadow-cyan-500/20">Edit</a>
+                    <a href="{% url 'delete_task' task.id %}"
+                        class="bg-[#FF6E6E] text-[#121212] px-3 py-2 rounded-xl hover:bg-[#FFD166] transition duration-300 text-sm shadow-lg shadow-cyan-500/20"
+                        onclick="return confirm('Are you sure you want to delete this task?');">Delete</a>
+                </div>
+            </div>
+        </li>
+        {% empty %}
+        <li class="text-center py-12">
+            <svg class="w-16 h-16 mx-auto text-[#AAAAAA]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+            </svg>
+            <p class="text-[#AAAAAA] mt-4">No tasks found. Add one to get started! 🚀</p>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

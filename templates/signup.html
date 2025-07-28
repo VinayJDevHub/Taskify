@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+
+{% block title %}Register{% endblock %}
+
+{% block content %}
+<div class="flex flex-col justify-center py-12 sm:px-6 lg:px-8 min-h-[calc(100vh-4rem)]">
+    <div class="sm:mx-auto sm:w-full sm:max-w-md">
+        <h2 class="mt-6 text-center text-3xl font-bold tracking-wide text-[#EDEDED]">Create your account</h2>
+        <p class="mt-2 text-center text-sm text-[#AAAAAA]">
+            Or
+            <a href="{% url 'login' %}"
+                class="font-medium text-[#00FFFF] hover:text-[#FFD166] transition duration-300">sign in to your existing
+                account</a>
+        </p>
+    </div>
+
+    <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+        <div class="bg-[#1E1E1E] py-8 px-6 rounded-2xl shadow-lg shadow-cyan-500/20">
+            {% if form.errors %}
+            <div class="mb-6 bg-[#FF6E6E]/10 border border-[#FF6E6E] text-[#FF6E6E] px-4 py-3 rounded-xl">
+                {% for field in form %}
+                {% for error in field.errors %}
+                <p class="text-sm">{{ error|escape }}</p>
+                {% endfor %}
+                {% endfor %}
+                {% for error in form.non_field_errors %}
+                <p class="text-sm">{{ error|escape }}</p>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <form class="space-y-6" method="post">
+                {% csrf_token %}
+
+                <div>
+                    <label for="id_username" class="block text-sm font-medium text-[#AAAAAA]">Username</label>
+                    <div class="mt-1">
+                        <input id="id_username" name="username" type="text" required
+                            class="block w-full bg-[#2A2A2A] text-[#EDEDED] rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-[#00FFFF]/50 transition duration-300 border border-[#2A2A2A]"
+                            value="{{ form.username.value|default:'' }}">
+                    </div>
+                    <p class="mt-2 text-sm text-[#AAAAAA]">Required. 150 characters or fewer. Letters, digits and
+                        @/./+/-/_ only.</p>
+                </div>
+
+                <div>
+                    <label for="id_email" class="block text-sm font-medium text-[#AAAAAA]">Email</label>
+                    <div class="mt-1">
+                        <input id="id_email" name="email" type="email" required
+                            class="block w-full bg-[#2A2A2A] text-[#EDEDED] rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-[#00FFFF]/50 transition duration-300 border border-[#2A2A2A]"
+                            value="{{ form.email.value|default:'' }}">
+                    </div>
+                </div>
+
+                <div>
+                    <label for="id_password1" class="block text-sm font-medium text-[#AAAAAA]">Password</label>
+                    <div class="mt-1">
+                        <input id="id_password1" name="password1" type="password" required
+                            class="block w-full bg-[#2A2A2A] text-[#EDEDED] rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-[#00FFFF]/50 transition duration-300 border border-[#2A2A2A]">
+                    </div>
+                    <ul class="mt-2 text-sm text-[#AAAAAA] list-disc pl-5 space-y-1">
+                        <li>Your password can't be too similar to your other personal information.</li>
+                        <li>Your password must contain at least 8 characters.</li>
+                        <li>Your password can't be a commonly used password.</li>
+                        <li>Your password can't be entirely numeric.</li>
+                    </ul>
+                </div>
+
+                <div>
+                    <label for="id_password2" class="block text-sm font-medium text-[#AAAAAA]">Password
+                        confirmation</label>
+                    <div class="mt-1">
+                        <input id="id_password2" name="password2" type="password" required
+                            class="block w-full bg-[#2A2A2A] text-[#EDEDED] rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-[#00FFFF]/50 transition duration-300 border border-[#2A2A2A]">
+                    </div>
+                    <p class="mt-2 text-sm text-[#AAAAAA]">Enter the same password as before, for verification.</p>
+                </div>
+
+                <div>
+                    <button type="submit"
+                        class="w-full flex justify-center py-3 px-4 rounded-xl text-sm font-medium text-[#121212] bg-[#00FFFF] hover:bg-[#FFD166] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-[#1E1E1E] focus:ring-[#00FFFF] transition duration-300 shadow-lg shadow-cyan-500/20">
+                        Register
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
