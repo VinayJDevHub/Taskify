@@ -9,6 +9,8 @@ from django.urls import reverse_lazy
 from .models import Task
 from .forms import TaskForm, CustomUserCreationForm
 from django.contrib.auth import get_user_model
+from django.http import HttpResponse
+
 
 User = get_user_model()
 
@@ -125,6 +127,9 @@ class RegisterView(CreateView):
             self.request, 'Registration successful! Please log in.')
         return response
 
+
+def ping_view(request):
+    return HttpResponse("pong")
 
 
 

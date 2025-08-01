@@ -10,6 +10,7 @@ urlpatterns = [
     path('register/', views.RegisterView.as_view(), name='register'),
     path('', include('task.urls')),
     path("__reload__/", include("django_browser_reload.urls")),
+    path("ping/", views.ping_view, name="ping"),
 ]
 
 
