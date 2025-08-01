@@ -129,7 +129,7 @@ class RegisterView(CreateView):
 
 
 def ping_view(request):
-    return HttpResponse("pong")
+    return HttpResponse("ok")
 
 
 
