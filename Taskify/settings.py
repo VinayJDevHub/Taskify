@@ -12,6 +12,7 @@
 
 from pathlib import Path
 from datetime import timedelta
+import dj_database_url
 import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -41,7 +42,7 @@ INSTALLED_APPS = [
     "django_browser_reload",
     'rest_framework',
     'rest_framework_simplejwt',
-    
+
 ]
 
 # Authentication
@@ -107,11 +108,14 @@ WSGI_APPLICATION = 'Taskify.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+
+
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    'default': dj_database_url.config(
+        default='postgresql://taskify_db_0iqf_user:25jRWaBaq53cPkrugi2S7EvxaeCozzCJ@dpg-d26et02li9vc7391sqi0-a/taskify_db_0iqf',
+        conn_max_age=600,
+        ssl_require=True
+    )
 }
 
 # Password validation
