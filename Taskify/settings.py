@@ -112,7 +112,7 @@ WSGI_APPLICATION = 'Taskify.wsgi.application'
 
 DATABASES = {
     'default': dj_database_url.config(
-        default='postgresql://taskify_db_0iqf_user:25jRWaBaq53cPkrugi2S7EvxaeCozzCJ@dpg-d26et02li9vc7391sqi0-a/taskify_db_0iqf',
+        default='postgresql://taskify_db_nzbt_user:liNPnWOYFJ00TihmjaGrnKd6AEDujGKZ@dpg-d343sie3jp1c73fi0m1g-a.oregon-postgres.render.com/taskify_db_nzbt',
         conn_max_age=600,
         ssl_require=True
     )
