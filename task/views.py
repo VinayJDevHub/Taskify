@@ -9,7 +9,8 @@ from django.urls import reverse_lazy
 from .models import Task
 from .forms import TaskForm, CustomUserCreationForm
 from django.contrib.auth import get_user_model
-from django.http import HttpResponse
+from django.http import JsonResponse
+from rest_framework.decorators import api_view, throttle_classes
 
 
 User = get_user_model()
@@ -17,7 +18,8 @@ User = get_user_model()
 
 @login_required
 def task_list(request):
-    tasks = Task.objects.filter(user=request.user).order_by('-priority', '-created_at')
+    tasks = Task.objects.filter(user=request.user).order_by(
+        '-priority', '-created_at')
 
     # Apply filters
     search_query = request.GET.get('q', '')
@@ -128,13 +130,13 @@ class RegisterView(CreateView):
         return response
 
 
+# ✅ Secure Cron Endpoint
+@api_view(["GET"])
+@throttle_classes([])  # disable throttling
 def ping_view(request):
-    return HttpResponse("ok")
+    secret = request.GET.get("secret")
+    if secret != "MY_SECRET_KEY":  # apna secret yahan dalna
+        return JsonResponse({"error": "Unauthorized"}, status=401)
 
-
-
-
-
-
-
-
+    # 👇 Yahan apna cron ka kaam likho (example: overdue tasks check)
+    return JsonResponse({"status": "cron job executed successfully"})
