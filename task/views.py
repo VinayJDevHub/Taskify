@@ -135,7 +135,7 @@ class RegisterView(CreateView):
 @throttle_classes([])  # disable throttling
 def ping_view(request):
     secret = request.GET.get("secret")
-    if secret != "MY_SECRET_KEY":  # apna secret yahan dalna
+    if secret != "vinay_taskify_123":  # apna secret yahan dalna
         return JsonResponse({"error": "Unauthorized"}, status=401)
 
     # 👇 Yahan apna cron ka kaam likho (example: overdue tasks check)
