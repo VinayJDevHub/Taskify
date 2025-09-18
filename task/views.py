@@ -11,6 +11,8 @@ from .forms import TaskForm, CustomUserCreationForm
 from django.contrib.auth import get_user_model
 from django.http import JsonResponse
 from rest_framework.decorators import api_view, throttle_classes
+from django.views.decorators.csrf import csrf_exempt
+
 
 
 User = get_user_model()
@@ -131,6 +133,7 @@ class RegisterView(CreateView):
 
 
 # ✅ Secure Cron Endpoint
+@csrf_exempt
 @api_view(["GET"])
 @throttle_classes([])  # disable throttling
 def ping_view(request):
