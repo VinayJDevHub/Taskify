@@ -14,7 +14,6 @@ from rest_framework.decorators import api_view, throttle_classes
 from django.views.decorators.csrf import csrf_exempt
 
 
-
 User = get_user_model()
 
 
@@ -132,7 +131,7 @@ class RegisterView(CreateView):
         return response
 
 
-# ✅ Secure Cron Endpoint
+# ✅ Secure Cron Endpoint for cron-job.org
 @csrf_exempt
 @api_view(["GET"])
 @throttle_classes([])  # disable throttling
